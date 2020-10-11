@@ -1,20 +1,46 @@
-# LDavisBot
+import tweepy
+import webbrowser
+import os 
 
-import tweepy as tp
-import time
-import os
 
-# credentials to login to twitter api
-consumer_key = ''
-consumer_secret = ''
-access_token = ''
-access_secret = ''
+def getQuote():
 
-# login to twitter account api
-auth = tp.OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_token, access_secret)
-api = tp.API(auth)
+    filepath = 'quotes.txt'
+    with open(filepath,encoding="utf8") as fp:
+        quotes = fp.readlines()
+        index = int(quotes[0])
+        quote = quotes[index]
+    
+    newIndex = index+1
+    
+    newIndex = newIndex % len(quotes)
+    
+    quotes[0] = str(newIndex) + "\n"
 
-os.chdir('text')
+    with open("quotes.txt", "w",encoding="utf8") as f:
+        f.writelines(quotes)
 
-# selects text and uploads to twitter
+
+    return quote
+
+def Twitter_authenciate():
+    # credentials to login to twitter api
+
+    
+    auth = tweepy.OAuthHandler('', '')
+    auth.set_access_token('', '')
+        
+    api = tweepy.API(auth)
+
+
+    return api
+
+def tweet(quote,api):
+    tweet = quote
+    api.update_status(tweet)
+
+if __name__ == "__main__":
+
+    quote = getQuote()
+    api = Twitter_authenciate()
+    tweet(quote,api)
